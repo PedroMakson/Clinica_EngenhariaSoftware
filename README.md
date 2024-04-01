@@ -83,6 +83,8 @@
    Figura 02: <a href="https://drive.google.com/file/d/1cR7sRKb6Sjzvg2Z7CNCpYo9I7moMEokn/view?usp=drive_link" target="_blank">Diagrama de Caso e Uso</a>
 </p>
 
+<h3 align="justify">📑 Diagrama de Entidade-Relacionamento</h3>
+
 ![Diagrama Entidade-Relacionamentos](https://github.com/PedroMakson/Clinica_EngenhariaSoftware/blob/main/Diagramas/DiagramaEntidade&Relacionamento.png?raw=true)
 <p align="right">
    Figura 03: <a href="https://drive.google.com/file/d/1I-QW6_-QAgkAD2Dbx5gGF374FCwbITpP/view?usp=sharing" target="_blank">Diagrama Entidade-Relacionamento</a>
@@ -99,7 +101,7 @@
 
  ##  🛠 Feito com
 * [Astah UML](https://astah.net/downloads/)
-    * Criação do diagrama de classe;
+    * Criação dos diagramas;
 * [Visual Studio Code](https://code.visualstudio.com/)
     * Criação do código;
 * [Git e Github](https://github.com/liviabeatrizml/GradeHoraria)
@@ -108,12 +110,13 @@
    * Banco de Dados;
 * [Meet](https://meet.google.com/)
 	 * Chamada via meet (Compartilhamento de tela ao vivo e reuniões);
-* [Documentos Google](https://docs.google.com/document/d/1LuUPISf02Jz1BWatXY0dPWpjax62CK_r2kCl8-Ks2nA/edit?usp=sharing)
+* [Documentos Google](.)
     * Processador de texto on-line;
 ##
 
 <p align="right">
    Feito por <a href="https://github.com/Arthurkellysonp" target="_blank">Arthur Kellyson</a>,
-   <a href="https://github.com/lluisdavi" target="_blank"> Luis Davi</a> e
-   <a href="https://github.com/PedroMakson" target="_blank"> Pedro Makson</a>
+   <a href="https://github.com/Jonathanrian" target="_blank"> Jonathan Ryan</a>,
+   <a href="https://github.com/PedroMakson" target="_blank"> Pedro Makson</a> e
+   <a href="https://github.com/TiagoDev23" target="_blank"> Tiago Amaro.</a>
 </p>
