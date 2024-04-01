@@ -71,19 +71,19 @@
 ## 📊 Diagramas
 <h3 align="justify">📑 Diagrama de Classes</h3>
 
-![Diagrama de Classe](https://github.com/PedroMakson/Clinica/blob/main/Diagramas/DiagramaDeClasse.png?raw=true)
+![Diagrama de Classe](https://github.com/PedroMakson/Clinica_EngenhariaSoftware/blob/main/Diagramas/DiagramaDeClasse.png?raw=true)
 <p align="right">
    Figura 01: <a href="https://drive.google.com/file/d/1rQWGY-u24EdTtthOCRRWNBHo2Ge2iUAb/view?usp=drive_link" target="_blank">Diagrama de Classes</a>
 </p>
 
 <h3 align="justify">📑 Diagrama de Caso e Uso</h3>
 
-![Diagrama de Caso e Uso](https://github.com/PedroMakson/Clinica/blob/main/Diagramas/DiagramaDeCasoUso.png?raw=true)
+![Diagrama de Caso e Uso](https://github.com/PedroMakson/Clinica_EngenhariaSoftware/blob/main/Diagramas/DiagramaDeCasoUso.png?raw=true)
 <p align="right">
    Figura 02: <a href="https://drive.google.com/file/d/1cR7sRKb6Sjzvg2Z7CNCpYo9I7moMEokn/view?usp=drive_link" target="_blank">Diagrama de Caso e Uso</a>
 </p>
 
-![Diagrama Entidade-Relacionamentos](https://github.com/PedroMakson/Clinica/blob/main/Diagramas/DiagramaEntidade&Relacionamento.png?raw=true)
+![Diagrama Entidade-Relacionamentos](https://github.com/PedroMakson/Clinica_EngenhariaSoftware/blob/main/Diagramas/DiagramaEntidade&Relacionamento.png?raw=true)
 <p align="right">
    Figura 03: <a href="https://drive.google.com/file/d/1I-QW6_-QAgkAD2Dbx5gGF374FCwbITpP/view?usp=sharing" target="_blank">Diagrama Entidade-Relacionamento</a>
 </p>
