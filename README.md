@@ -83,7 +83,7 @@
    Figura 02: <a href="https://drive.google.com/file/d/1cR7sRKb6Sjzvg2Z7CNCpYo9I7moMEokn/view?usp=drive_link" target="_blank">Diagrama de Caso e Uso</a>
 </p>
 
-![Diagrama Entidade-Relacionamentos](https://github.com/PedroMakson/Clinica/blob/main/Diagramas/DiagramaEntidade&Relacionamento.jpeg?raw=true)
+![Diagrama Entidade-Relacionamentos](https://github.com/PedroMakson/Clinica/blob/main/Diagramas/DiagramaEntidade&Relacionamento.png?raw=true)
 <p align="right">
    Figura 03: <a href="https://drive.google.com/file/d/1I-QW6_-QAgkAD2Dbx5gGF374FCwbITpP/view?usp=sharing" target="_blank">Diagrama Entidade-Relacionamento</a>
 </p>
