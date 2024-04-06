@@ -470,6 +470,7 @@ public class PacienteController {
             App.limparTela();
             System.out.println("\n > Paciente cadastrado COM SUCESSO! <\n");
         } else {
+            App.limparTela();
             System.out.println("\n > Paciente cadastrado SEM SUCESSO! <\n");
         }
     }

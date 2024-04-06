@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.controllers.FuncionarioController;
 import com.controllers.PacienteController;
+import com.controllers.ServicoController;
 import com.models.entity.Conexao;
 
 public class App {
@@ -24,15 +25,14 @@ public class App {
                     System.out.println("|  *  *   C L I N I C A   *  *  |");
                     System.out.println("+-------------------------------+");
                     System.out.println("| 1 -> Realizar login           |");
-                    System.out.println("| 2 -> Cadastrar conta          |");
-                    System.out.println("| 3 -> Pedir ajuda              |");
-                    System.out.println("| 4 -> Sair do app              |");
+                    System.out.println("| 2 -> Pedir ajuda              |");
+                    System.out.println("| 3 -> Sair do app              |");
                     System.out.println("+-------------------------------+");
                     System.out.printf("| Digite: ");
                     if (scanner.hasNextInt()) {
                         opcao = scanner.nextInt();
                         limparTela();
-                        if (opcao < 1 || opcao > 4) {
+                        if (opcao < 1 || opcao > 3) {
                             System.out.println("\n Opção inválida, tente novamente!\n");
                         }
                     } else {
@@ -41,7 +41,7 @@ public class App {
                         scanner.next(); // Limpar o buffer de entrada
                         opcao = -1; // Define uma opção inválida para continuar o loop
                     }
-                } while (opcao < 1 || opcao > 4);
+                } while (opcao < 1 || opcao > 3);
 
                 switch (opcao) {
                     case 1:
@@ -161,7 +161,6 @@ public class App {
                                                 System.out.println("| 1 -> Cadastrar Paciente       |");
                                                 System.out.println("| 2 -> Editar Paciente          |");
                                                 System.out.println("| 3 -> Visualizar Paciente      |");
-                                                System.out.println("| 4 -> Voltar menu              |");
                                                 System.out.println("+-------------------------------+");
                                                 System.out.printf("| Digite: ");
 
@@ -209,6 +208,61 @@ public class App {
                                             }
                                             break;
                                         case 3:
+                                            int opcaoServico;
+                                            do {
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("|           M  E  N  U          |");
+                                                System.out.println("|     S  E  R  V  I  Ç  O  S    |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("| 1 -> Cadastrar Serviço        |");
+                                                System.out.println("| 2 -> Editar Serviço           |");
+                                                System.out.println("| 3 -> Visualizar Serviço       |");
+                                                System.out.println("| 4 -> Voltar menu              |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.printf("| Digite: ");
+
+                                                if (scanner.hasNextInt()) {
+                                                    opcaoServico = scanner.nextInt();
+                                                    limparTela();
+                                                    if (opcaoServico < 1 || opcaoServico > 4) {
+                                                        System.out.println(
+                                                                "\n > Opção inválida, tente novamente! <\n");
+                                                    }
+                                                } else {
+                                                    limparTela();
+                                                    System.out.println("\n > Opção inválida, tente novamente! <\n");
+                                                    scanner.next(); // Limpar o buffer de entrada
+                                                    opcaoServico = -1; // Define uma opção inválida para continuar
+                                                                       // o loop
+                                                }
+
+                                                if (opcaoServico == 4) {
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                }
+
+                                            } while (opcaoServico < 1 || opcaoServico > 4);
+
+                                            switch (opcaoServico) {
+                                                case 1:
+                                                    ServicoController.cadastrarServico();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 2:
+                                                    ServicoController.exibirServicos();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 3:
+
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 4:
+                                                    limparTela();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
                                             break;
                                         case 4:
                                             break;
@@ -239,8 +293,8 @@ public class App {
                         break;
                 }
 
-            } while (opcao < 1 || opcao > 4);
-        } while (opcao != 4);
+            } while (opcao < 1 || opcao > 3);
+        } while (opcao != 3);
 
         System.out.println("\n+----------------------------------+");
         System.out.println("|  Você deslogou do DENTAL CLINIC! |");
