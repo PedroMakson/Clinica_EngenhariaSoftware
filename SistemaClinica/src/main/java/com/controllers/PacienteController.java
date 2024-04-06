@@ -1,57 +1,40 @@
 package com.controllers;
 
 import java.sql.Connection;
-import java.util.Date;
-import java.util.Objects;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Objects;
 import java.util.Scanner;
 
 import com.App;
-import com.models.dao.FuncionarioDAO;
+import com.models.dao.PacienteDAO;
 import com.models.entity.Conexao;
-import com.models.entity.Funcionario;
+import com.models.entity.Paciente;
 
-public class FuncionarioController {
+public class PacienteController {
 
     private static Connection conexao = Conexao.getInstancia();
-    private static FuncionarioDAO funcionarioDAO = new FuncionarioDAO(conexao);
+    private static PacienteDAO pacienteDAO = new PacienteDAO(conexao);
     static Scanner scanner = new Scanner(System.in);
 
-    public static boolean logar(String cpf, String senha) throws SQLException {
-        if (funcionarioDAO.validarCredenciaisFuncionario(cpf, senha)) {
+    public static boolean verificarExistenciaPacienteCPF(String cpf) throws SQLException {
+        if (pacienteDAO.validarCPFDoPaciente(cpf)) {
             return true;
         }
         return false;
     }
 
-    public static boolean verificarStatus(String cpf) throws SQLException {
-        if (funcionarioDAO.validarStatusFuncionario(cpf)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean verificarExistenciaFuncionarioCPF(String cpf) throws SQLException {
-        if (funcionarioDAO.validarCPFDoFuncionario(cpf)) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void cadastrarFuncionario() throws SQLException {
-
-        // Variáveis para armazenar os dados do funcionário
+    public static void cadastrarPaciente() throws SQLException {
+        // Variáveis para armazenar os dados do paciente
         String cpf = null;
         String nome = null;
         Date dataNascimento = null;
         String sexo = null;
-        String cargo = null;
-        double salario = 0;
-        Date dataContratacao = new Date(); // Obtém a data atual
-        boolean status = true;
+        double peso = 0;
+        double altura = 0;
+        String tipoSanguineo = null;
         String telefone = null;
         String email = null;
         String senha = "123mudar"; // Senha padrão
@@ -64,7 +47,7 @@ public class FuncionarioController {
 
         System.out.println("+-------------------------------------------+");
         System.out.println("|      C  A  D  A  S  T  R  O    D  E       |");
-        System.out.println("|    F  U  N  C  I  O  N  Á  R  I  O  S     |");
+        System.out.println("|          P  A  C  I  E  N  T  E           |");
         System.out.println("+-------------------------------------------+");
 
         // Loop para garantir que o CPF seja válido e único
@@ -87,7 +70,7 @@ public class FuncionarioController {
             }
 
             // Verifica se um CPF já existe no banco de dados
-            if (verificarExistenciaFuncionarioCPF(cpf)) {
+            if (verificarExistenciaPacienteCPF(cpf)) {
                 App.limparTela();
                 System.out.println("\n > Já existe um usuário com esse CPF, tente novamente. <\n");
                 continue;
@@ -184,56 +167,72 @@ public class FuncionarioController {
             break;
         } while (true);
 
-        // Validação para o cargo
+        // Validação para o peso
         do {
-            System.out.print("-> Cargo: ");
-            cargo = scanner.nextLine();
+            System.out.print("-> Peso (em kg): ");
+            String pesoStr = scanner.nextLine();
 
-            // Verifica se o cargo não é nulo ou vazio
-            if (Objects.isNull(cargo) || cargo.trim().isEmpty()) {
+            // Tenta converter a entrada do usuário para um valor double
+            try {
+                peso = Double.parseDouble(pesoStr);
+            } catch (NumberFormatException e) {
                 App.limparTela();
-                System.out.println("\n > O cargo não pode ser nulo ou vazio. Tente novamente. <\n");
-                continue;
-            }
-
-            // Verifica se o cargo contém apenas letras, espaços e caracteres especiais
-            // comuns em nomes de cargos
-            if (!cargo.matches("[\\p{L}\\s\\-']+")) {
-                App.limparTela();
-                System.out.println(
-                        "\n > O cargo deve conter apenas letras, espaços e caracteres especiais comuns. Por favor, insira um cargo válido. <\n");
+                System.out.println("\n > Peso inválido. Por favor, insira um valor numérico válido. <\n");
                 continue; // Volta ao início do loop para uma nova entrada
             }
 
-            // Verifica se o cargo não excede o tamanho máximo permitido
-            if (cargo.length() > 40) {
+            // Verifica se o peso é um valor positivo
+            if (peso <= 0) {
                 App.limparTela();
-                System.out.println("\n > O cargo deve conter no máximo 40 caracteres. Tente novamente. <\n");
-                continue;
+                System.out.println("\n > Peso deve ser um valor positivo. Tente novamente. <\n");
+                continue; // Volta ao início do loop para uma nova entrada
             }
 
             // Se passar por todas as verificações, encerra o loop
             break;
         } while (true);
 
-        // Validação para o salário
+        // Validação para a altura
         do {
-            System.out.print("-> Salário: ");
-            String salarioStr = scanner.nextLine();
+            System.out.print("-> Altura (em metros): ");
+            String alturaStr = scanner.nextLine();
 
             // Tenta converter a entrada do usuário para um valor double
             try {
-                salario = Double.parseDouble(salarioStr);
+                altura = Double.parseDouble(alturaStr);
             } catch (NumberFormatException e) {
                 App.limparTela();
-                System.out.println("\n > Salário inválido. Por favor, insira um valor numérico válido. <\n");
+                System.out.println("\n > Altura inválida. Por favor, insira um valor numérico válido. <\n");
                 continue; // Volta ao início do loop para uma nova entrada
             }
 
-            // Verifica se o salário é um valor positivo
-            if (salario <= 0) {
+            // Verifica se a altura é um valor positivo
+            if (altura <= 0) {
                 App.limparTela();
-                System.out.println("\n > Salário deve ser um valor positivo. Tente novamente. <\n");
+                System.out.println("\n > Altura deve ser um valor positivo. Tente novamente. <\n");
+                continue; // Volta ao início do loop para uma nova entrada
+            }
+
+            // Se passar por todas as verificações, encerra o loop
+            break;
+        } while (true);
+
+        // Validação para o tipo sanguíneo
+        do {
+            System.out.print("-> Tipo Sanguíneo (A+, A-, B+, B-, AB+, AB-, O+, O-): ");
+            tipoSanguineo = scanner.nextLine().toUpperCase(); // Convertendo para maiúsculas para facilitar a comparação
+
+            // Verifica se o tipo sanguíneo não é nulo ou vazio
+            if (Objects.isNull(tipoSanguineo) || tipoSanguineo.trim().isEmpty()) {
+                App.limparTela();
+                System.out.println("\n > O tipo sanguíneo não pode ser nulo ou vazio. Tente novamente. <\n");
+                continue;
+            }
+
+            // Verifica se o tipo sanguíneo é válido
+            if (!tipoSanguineo.matches("^(A|B|AB|O)[+-]$")) {
+                App.limparTela();
+                System.out.println("\n > Tipo sanguíneo inválido. Por favor, insira um tipo sanguíneo válido. <\n");
                 continue; // Volta ao início do loop para uma nova entrada
             }
 
@@ -269,7 +268,7 @@ public class FuncionarioController {
 
             // Se passar por todas as verificações, encerra o loop
             break;
-        } while (!telefone.matches("\\d{11}"));
+        } while (true);
 
         // Validação para o email
         boolean emailExistente;
@@ -289,7 +288,7 @@ public class FuncionarioController {
                 // Verifica se o email é válido.
                 // Verifica se o email já existe no banco de dados
                 try {
-                    emailExistente = funcionarioDAO.verificarEmailFuncionario(email);
+                    emailExistente = pacienteDAO.verificarEmailPaciente(email);
                 } catch (SQLException e) {
                     emailExistente = true; // Em caso de exceção, considera o email como existente para evitar loops
                                            // infinitos
@@ -461,20 +460,21 @@ public class FuncionarioController {
             break;
         } while (true);
 
-        // Cria um objeto Funcionario com os dados validados
-        Funcionario funcionario = new Funcionario(cpf, nome, dataNascimento, sexo, cargo, salario, dataContratacao,
-                status, telefone, email, senha, cep, rua, numeroDaCasa, bairro, cidade, uf);
+        // Cria um objeto Paciente com os dados validados
+        Paciente paciente = new Paciente(cpf, nome, dataNascimento, sexo, peso, altura, tipoSanguineo, telefone, email,
+                senha,
+                cep, rua, numeroDaCasa, bairro, cidade, uf);
 
-        // Insere o funcionário no banco de dados
-        if (funcionarioDAO.inserirFuncionario(funcionario)) {
+        // Insere o paciente no banco de dados
+        if (pacienteDAO.inserirPaciente(paciente)) {
             App.limparTela();
-            System.out.println("\n > Funcionário cadastrado COM SUCESSO! <\n");
+            System.out.println("\n > Paciente cadastrado COM SUCESSO! <\n");
         } else {
-            System.out.println("\n > Funcionário cadastrado SEM SUCESSO! <\n");
+            System.out.println("\n > Paciente cadastrado SEM SUCESSO! <\n");
         }
     }
 
-    public static void visualizarDadosDoFuncionario() throws SQLException {
+    public static void visualizarDadosDoPaciente() throws SQLException {
         App.limparTela();
         String cpf;
         int contador = 1;
@@ -484,12 +484,12 @@ public class FuncionarioController {
             System.out.println("+-------------------------------------------+");
             System.out.println("|     V I S U A L I Z A R   D A D O S       |");
             System.out.println("+-------------------------------------------+");
-            System.out.printf("| CPF do funcionário: ");
+            System.out.printf("| CPF do paciente: ");
             cpf = scanner.nextLine();
 
-            if (verificarExistenciaFuncionarioCPF(cpf) == false) {
+            if (verificarExistenciaPacienteCPF(cpf) == false) {
                 App.limparTela();
-                System.out.println("\n > Usuário inexistente no banco de dados. <\n");
+                System.out.println("\n > Paciente inexistente no banco de dados. <\n");
                 contador++;
             }
 
@@ -497,53 +497,50 @@ public class FuncionarioController {
                 break;
             }
 
-        } while (verificarExistenciaFuncionarioCPF(cpf) == false);
+        } while (verificarExistenciaPacienteCPF(cpf) == false);
 
         if (contador != 3) {
-            Funcionario funcionario = funcionarioDAO.retornarFuncionarioPorCPF(cpf);
+            Paciente paciente = pacienteDAO.retornarPacientePorCPF(cpf);
 
             App.limparTela();
             System.out.println("+-------------------------------------------+");
-            System.out.println("|   D A D O S  D O  F U N C I O N A R I O   |");
+            System.out.println("|   D A D O S   D O   P A C I E N T E       |");
             System.out.println("+-------------------------------------------+");
-            System.out.println("| Nome: " + funcionario.getNome());
+            System.out.println("| Nome: " + paciente.getNome());
             System.out.println(
-                    "| CPF: " + funcionario.getCpf().substring(0, 3) + "." + funcionario.getCpf().substring(3, 6)
-                            + "." + funcionario.getCpf().substring(6, 9) + "-" + funcionario.getCpf().substring(9, 11));
-            System.out.println("| Data de nascimento: " + funcionario.getDataNascimento().toString().substring(8, 10)
-                    + "/" + funcionario.getDataNascimento().toString().substring(5, 7) + "/"
-                    + funcionario.getDataNascimento().toString().substring(0, 4));
-            System.out.println("| Sexo: " + funcionario.getSexo());
+                    "| CPF: " + paciente.getCpf().substring(0, 3) + "." + paciente.getCpf().substring(3, 6)
+                            + "." + paciente.getCpf().substring(6, 9) + "-" + paciente.getCpf().substring(9, 11));
+            System.out.println("| Data de nascimento: " + paciente.getDataNascimento().toString().substring(8, 10)
+                    + "/" + paciente.getDataNascimento().toString().substring(5, 7) + "/"
+                    + paciente.getDataNascimento().toString().substring(0, 4));
+            System.out.println("| Sexo: " + paciente.getSexo());
             System.out.println("+-------------------------------------------+");
             System.out.println("|               C O N T A T O               |");
             System.out.println("+-------------------------------------------+");
-            System.out.printf("| Telefone: (" + funcionario.getTelefone().substring(0, 2) + ")"
-                    + funcionario.getTelefone().substring(2, 7) + "-" + funcionario.getTelefone().substring(7)
+            System.out.printf("| Telefone: (" + paciente.getTelefone().substring(0, 2) + ")"
+                    + paciente.getTelefone().substring(2, 7) + "-" + paciente.getTelefone().substring(7)
                     + "\n");
-            System.out.println("| Email: " + funcionario.getEmail());
+            System.out.println("| Email: " + paciente.getEmail());
             System.out.println("+-------------------------------------------+");
-            System.out.println("|   D A D O S  P R O F I S S I O N A I S    |");
+            System.out.println("|   I N F O R M A Ç Õ E S   M É D I C A S   |");
             System.out.println("+-------------------------------------------+");
-            System.out.println("| Cargo: " + funcionario.getCargo());
-            System.out.println("| Salário: " + funcionario.getSalario());
-            System.out.println("| Data de contratação: " + funcionario.getDataContratacao().toString().substring(8, 10)
-                    + "/" + funcionario.getDataContratacao().toString().substring(5, 7) + "/"
-                    + funcionario.getDataContratacao().toString().substring(0, 4));
-            System.out.println("| Status: " + (funcionario.getStatus() ? "Ativo" : "Inativo"));
+            System.out.println("| Peso: " + paciente.getPeso());
+            System.out.println("| Altura: " + paciente.getAltura());
+            System.out.println("| Tipo Sanguíneo: " + paciente.getTipoSanguineo());
             System.out.println("+-------------------------------------------+");
             System.out.println("|               E N D E R E Ç O             |");
             System.out.println("+-------------------------------------------+");
-            System.out.println("| CEP: " + funcionario.getCep());
-            System.out.println("| Rua: " + funcionario.getRua());
-            System.out.println("| Número da Casa: " + funcionario.getNumeroDaCasa());
-            System.out.println("| Bairro: " + funcionario.getBairro());
-            System.out.println("| Cidade: " + funcionario.getCidade());
-            System.out.println("| UF: " + funcionario.getUf());
+            System.out.println("| CEP: " + paciente.getCep());
+            System.out.println("| Rua: " + paciente.getRua());
+            System.out.println("| Número da Casa: " + paciente.getNumeroDaCasa());
+            System.out.println("| Bairro: " + paciente.getBairro());
+            System.out.println("| Cidade: " + paciente.getCidade());
+            System.out.println("| UF: " + paciente.getUf());
             System.out.println("+-------------------------------------------+\n");
         }
     }
 
-    public static void atualizarDadosDoFuncionario() throws SQLException {
+    public static void atualizarDadosDoPaciente() throws SQLException {
         int opcao;
         String cpf;
         int contador = 1;
@@ -553,12 +550,12 @@ public class FuncionarioController {
             System.out.println("+----------------------------------------------+");
             System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
             System.out.println("+----------------------------------------------+");
-            System.out.printf("| CPF do funcionário: ");
+            System.out.printf("| CPF do paciente: ");
             cpf = scanner.nextLine();
 
-            if (verificarExistenciaFuncionarioCPF(cpf) == false) {
+            if (!verificarExistenciaPacienteCPF(cpf)) {
                 App.limparTela();
-                System.out.println("\n > Usuário inexistente no banco de dados. <\n");
+                System.out.println("\n > Paciente inexistente no banco de dados. <\n");
                 contador++;
             }
 
@@ -566,7 +563,7 @@ public class FuncionarioController {
                 break;
             }
 
-        } while (verificarExistenciaFuncionarioCPF(cpf) == false);
+        } while (!verificarExistenciaPacienteCPF(cpf));
 
         if (contador != 3) {
             do {
@@ -577,11 +574,11 @@ public class FuncionarioController {
                 System.out.println("|  1 - Nome                                    |");
                 System.out.println("|  2 - Data de Nascimento                      |");
                 System.out.println("|  3 - Sexo                                    |");
-                System.out.println("|  4 - Cargo                                   |");
-                System.out.println("|  5 - Salário                                 |");
-                System.out.println("|  6 - Telefone                                |");
-                System.out.println("|  7 - E-mail                                  |");
-                System.out.println("|  8 - Status                                  |");
+                System.out.println("|  4 - Peso                                    |");
+                System.out.println("|  5 - Altura                                  |");
+                System.out.println("|  6 - Tipo Sanguíneo                          |");
+                System.out.println("|  7 - Telefone                                |");
+                System.out.println("|  8 - E-mail                                  |");
                 System.out.println("|  9 - CEP                                     |");
                 System.out.println("| 10 - Rua                                     |");
                 System.out.println("| 11 - Número da Casa                          |");
@@ -680,46 +677,68 @@ public class FuncionarioController {
                             break;
                         } while (true);
                         break;
-                    case 4: // Cargo
+                    case 4: // Peso
                         do {
                             System.out.println("+----------------------------------------------+");
                             System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
                             System.out.println("+----------------------------------------------+");
-                            System.out.print("-> Novo Cargo: ");
-                            novoValor = scanner.nextLine();
-                            if (Objects.isNull(novoValor) || novoValor.trim().isEmpty() || novoValor.length() > 40 ||
-                                    !novoValor.matches("[\\p{L}\\s\\-']+")) {
-                                App.limparTela();
-                                System.out.println("\n > Cargo inválido, tente novamente! <\n");
-                                continue;
-                            }
-                            break;
-                        } while (true);
-                        break;
-                    case 5: // Salário
-                        do {
-                            System.out.println("+----------------------------------------------+");
-                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
-                            System.out.println("+----------------------------------------------+");
-                            System.out.print("-> Novo Salário: ");
+                            System.out.print("-> Novo Peso: ");
                             novoValor = scanner.nextLine();
                             try {
-                                double salario = Double.parseDouble(novoValor);
-                                if (salario <= 0) {
+                                double peso = Double.parseDouble(novoValor);
+                                if (peso <= 0) {
                                     App.limparTela();
-                                    System.out.println("\n > Salário deve ser um valor positivo. Tente novamente. <\n");
+                                    System.out.println("\n > Peso deve ser um valor positivo. Tente novamente. <\n");
                                     continue;
                                 }
                             } catch (NumberFormatException e) {
                                 App.limparTela();
                                 System.out.println(
-                                        "\n > Salário inválido. Por favor, insira um valor numérico válido. <\n");
+                                        "\n > Peso inválido. Por favor, insira um valor numérico válido. <\n");
                                 continue;
                             }
                             break;
                         } while (true);
                         break;
-                    case 6: // Telefone
+                    case 5: // Altura
+                        do {
+                            System.out.println("+----------------------------------------------+");
+                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                            System.out.println("+----------------------------------------------+");
+                            System.out.print("-> Nova Altura: ");
+                            novoValor = scanner.nextLine();
+                            try {
+                                double altura = Double.parseDouble(novoValor);
+                                if (altura <= 0) {
+                                    App.limparTela();
+                                    System.out.println("\n > Altura deve ser um valor positivo. Tente novamente. <\n");
+                                    continue;
+                                }
+                            } catch (NumberFormatException e) {
+                                App.limparTela();
+                                System.out.println(
+                                        "\n > Altura inválida. Por favor, insira um valor numérico válido. <\n");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        break;
+                    case 6: // Tipo Sanguíneo
+                        do {
+                            System.out.println("+----------------------------------------------+");
+                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                            System.out.println("+----------------------------------------------+");
+                            System.out.print("-> Novo Tipo Sanguíneo: ");
+                            novoValor = scanner.nextLine();
+                            if (Objects.isNull(novoValor) || novoValor.trim().isEmpty() || novoValor.length() != 3) {
+                                App.limparTela();
+                                System.out.println("\n > Tipo sanguíneo inválido, tente novamente! <\n");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        break;
+                    case 7: // Telefone
                         do {
                             System.out.println("+----------------------------------------------+");
                             System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
@@ -735,7 +754,7 @@ public class FuncionarioController {
                             break;
                         } while (true);
                         break;
-                    case 7: // E-mail
+                    case 8: // E-mail
                         boolean emailExistente;
                         do {
                             System.out.println("+----------------------------------------------+");
@@ -753,7 +772,7 @@ public class FuncionarioController {
                             }
                             // Verificar se o e-mail já está cadastrado
                             try {
-                                emailExistente = funcionarioDAO.verificarEmailFuncionario(novoValor);
+                                emailExistente = pacienteDAO.verificarEmailPaciente(novoValor);
                             } catch (SQLException e) {
                                 System.out.println(
                                         "\n > Erro ao verificar o e-mail no banco de dados. Por favor, tente novamente. <\n");
@@ -762,22 +781,6 @@ public class FuncionarioController {
                             if (emailExistente) {
                                 App.limparTela();
                                 System.out.println("\n > Este e-mail já está cadastrado. Por favor, insira outro. <\n");
-                                continue;
-                            }
-                            break;
-                        } while (true);
-                        break;
-                    case 8: // Status
-                        do {
-                            System.out.println("+----------------------------------------------+");
-                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
-                            System.out.println("+----------------------------------------------+");
-                            System.out.print("-> Novo Status (Ativo/Inativo): ");
-                            novoValor = scanner.nextLine().toLowerCase();
-                            if (Objects.isNull(novoValor) || novoValor.trim().isEmpty() ||
-                                    (!novoValor.equals("ativo") && !novoValor.equals("inativo"))) {
-                                App.limparTela();
-                                System.out.println("\n > Status inválido. Por favor, insira 'Ativo' ou 'Inativo'. <\n");
                                 continue;
                             }
                             break;
@@ -880,8 +883,8 @@ public class FuncionarioController {
                         continue; // Reinicie o loop para solicitar uma nova entrada
                 }
 
-                // Chamar o método para atualizar o atributo do funcionário
-                if (funcionarioDAO.atualizarAtributoFuncionario(cpf, opcao, novoValor)) {
+                // Chamar o método para atualizar o atributo do paciente
+                if (pacienteDAO.atualizarAtributoPaciente(cpf, opcao, novoValor)) {
                     App.limparTela();
                     System.out.println("\n > Dados atualizados com sucesso! <\n");
                     return;
@@ -892,31 +895,6 @@ public class FuncionarioController {
                 }
 
             } while (true);
-        }
-    }
-
-    static Date stringParaData(String dataString) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try {
-            Date dataNascimento = sdf.parse(dataString);
-
-            // Verificar se a data de nascimento é anterior à data atual
-            Calendar calNascimento = Calendar.getInstance();
-            calNascimento.setTime(dataNascimento);
-            Calendar calAtual = Calendar.getInstance();
-
-            if (calNascimento.before(calAtual)) {
-                return dataNascimento; // Data válida
-            } else {
-                App.limparTela();
-                System.out.println("\n > A data de nascimento deve ser anterior à data atual. Tente novamente. <\n");
-                return null; // Data inválida
-            }
-        } catch (ParseException e) {
-            App.limparTela();
-            System.out.println(
-                    "\n > Erro na conversão de data. Certifique-se de usar o formato AAAA-MM-DD. Tente novamente. <\n");
-            return null; // Data inválida
         }
     }
 }

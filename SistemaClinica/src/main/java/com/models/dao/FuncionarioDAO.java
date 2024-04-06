@@ -18,7 +18,7 @@ public class FuncionarioDAO {
         FuncionarioDAO.conexao = conexao;
     }
 
-    public boolean validarFuncionario(String cpfFuncionario, String senhaFuncionario) throws SQLException {
+    public boolean validarCredenciaisFuncionario(String cpfFuncionario, String senhaFuncionario) throws SQLException {
         String sql = "SELECT cpf, senha FROM Funcionario WHERE cpf = ? AND senha = ?";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -62,7 +62,7 @@ public class FuncionarioDAO {
         return false; // Retorna false se não encontrar uma correspondência de CPF
     }
 
-    public boolean validarCPF(String cpfFuncionario) throws SQLException {
+    public boolean validarCPFDoFuncionario(String cpfFuncionario) throws SQLException {
         String sql = "SELECT cpf FROM Funcionario WHERE cpf = ?";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -82,7 +82,7 @@ public class FuncionarioDAO {
         return false; // Retorna false se não encontrar uma correspondência de CPF
     }
 
-    public boolean verificarEmail(String emailFuncionario) throws SQLException {
+    public boolean verificarEmailFuncionario(String emailFuncionario) throws SQLException {
         String sql = "SELECT email FROM Funcionario WHERE email = ?";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {

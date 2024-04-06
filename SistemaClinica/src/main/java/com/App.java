@@ -1,13 +1,10 @@
 package com;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Scanner;
 
 import com.controllers.FuncionarioController;
+import com.controllers.PacienteController;
 import com.models.entity.Conexao;
 
 public class App {
@@ -18,7 +15,7 @@ public class App {
         Conexao.getInstancia();
         Scanner scanner = new Scanner(System.in);
         int opcao;
-        String login, senha, opcaoString;
+        String login, senha;
 
         do {
             do {
@@ -100,101 +97,116 @@ public class App {
                                     switch (opcaoMenu) {
                                         case 1: // MENU FUNCIONÁRIOS
                                             int opcaoFuncionario;
-
                                             do {
-                                                do {
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.println("|           M  E  N  U          |");
-                                                    System.out.println("|    F U N C I O N Á R I O S    |");
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.println("| 1 -> Cadastrar Funcionário    |");
-                                                    System.out.println("| 2 -> Editar Funcionário       |");
-                                                    System.out.println("| 3 -> Visualizar Funcionário   |");
-                                                    System.out.println("| 4 -> Voltar menu              |");
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.printf("| Digite: ");
-                                                    if (scanner.hasNextInt()) {
-                                                        opcaoFuncionario = scanner.nextInt();
-                                                        limparTela();
-                                                        if (opcaoFuncionario < 1 || opcaoFuncionario > 4) {
-                                                            System.out.println(
-                                                                    "\n > Opção inválida, tente novamente! <\n");
-                                                        }
-                                                    } else {
-                                                        limparTela();
-                                                        System.out.println("\n > Opção inválida, tente novamente! <\n");
-                                                        scanner.next(); // Limpar o buffer de entrada
-                                                        opcaoFuncionario = -1; // Define uma opção inválida para
-                                                                               // continuar o loop
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("|           M  E  N  U          |");
+                                                System.out.println("|    F U N C I O N Á R I O S    |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("| 1 -> Cadastrar Funcionário    |");
+                                                System.out.println("| 2 -> Editar Funcionário       |");
+                                                System.out.println("| 3 -> Visualizar Funcionário   |");
+                                                System.out.println("| 4 -> Voltar menu              |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.printf("| Digite: ");
+                                                if (scanner.hasNextInt()) {
+                                                    opcaoFuncionario = scanner.nextInt();
+                                                    limparTela();
+                                                    if (opcaoFuncionario < 1 || opcaoFuncionario > 4) {
+                                                        System.out.println(
+                                                                "\n > Opção inválida, tente novamente! <\n");
                                                     }
-
-                                                    if (opcaoFuncionario == 4) {
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    }
-                                                } while (opcaoFuncionario < 1 || opcaoFuncionario > 4);
-
-                                                switch (opcaoFuncionario) {
-                                                    case 1:
-                                                        FuncionarioController.cadastrarFuncionario();
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    case 2:
-                                                        FuncionarioController.atualizarDadosDoFuncionario();
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    case 3:
-                                                        FuncionarioController.visualizarDadosDoFuncionario();
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    case 4:
-                                                        limparTela();
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    default:
-                                                        break;
+                                                } else {
+                                                    limparTela();
+                                                    System.out.println("\n > Opção inválida, tente novamente! <\n");
+                                                    scanner.next(); // Limpar o buffer de entrada
+                                                    opcaoFuncionario = -1; // Define uma opção inválida para
+                                                                           // continuar o loop
                                                 }
 
+                                                if (opcaoFuncionario == 4) {
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                }
                                             } while (opcaoFuncionario < 1 || opcaoFuncionario > 4);
+
+                                            switch (opcaoFuncionario) {
+                                                case 1:
+                                                    FuncionarioController.cadastrarFuncionario();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 2:
+                                                    FuncionarioController.atualizarDadosDoFuncionario();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 3:
+                                                    FuncionarioController.visualizarDadosDoFuncionario();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 4:
+                                                    limparTela();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+
                                             break;
                                         case 2:// MENU PACIENTES
                                             int opcaoPaciente;
-
                                             do {
-                                                do {
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.println("|           M  E  N  U          |");
-                                                    System.out.println("|   P  A  C  I  E  N  T  E  S   |");
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.println("| 1 -> Cadastrar Paciente       |");
-                                                    System.out.println("| 2 -> Editar Paciente          |");
-                                                    System.out.println("| 3 -> Visualizar Pacientes     |");
-                                                    System.out.println("| 4 -> Voltar menu              |");
-                                                    System.out.println("+-------------------------------+");
-                                                    System.out.printf("| Digite: ");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("|           M  E  N  U          |");
+                                                System.out.println("|   P  A  C  I  E  N  T  E  S   |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("| 1 -> Cadastrar Paciente       |");
+                                                System.out.println("| 2 -> Editar Paciente          |");
+                                                System.out.println("| 3 -> Visualizar Paciente      |");
+                                                System.out.println("| 4 -> Voltar menu              |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.printf("| Digite: ");
 
-                                                    if (scanner.hasNextInt()) {
-                                                        opcaoPaciente = scanner.nextInt();
-                                                        limparTela();
-                                                        if (opcaoPaciente < 1 || opcaoPaciente > 4) {
-                                                            System.out.println(
-                                                                    "\n > Opção inválida, tente novamente! <\n");
-                                                        }
-                                                    } else {
-                                                        limparTela();
-                                                        System.out.println("\n > Opção inválida, tente novamente! <\n");
-                                                        scanner.next(); // Limpar o buffer de entrada
-                                                        opcaoPaciente = -1; // Define uma opção inválida para continuar
-                                                                            // o loop
+                                                if (scanner.hasNextInt()) {
+                                                    opcaoPaciente = scanner.nextInt();
+                                                    limparTela();
+                                                    if (opcaoPaciente < 1 || opcaoPaciente > 4) {
+                                                        System.out.println(
+                                                                "\n > Opção inválida, tente novamente! <\n");
                                                     }
+                                                } else {
+                                                    limparTela();
+                                                    System.out.println("\n > Opção inválida, tente novamente! <\n");
+                                                    scanner.next(); // Limpar o buffer de entrada
+                                                    opcaoPaciente = -1; // Define uma opção inválida para continuar
+                                                                        // o loop
+                                                }
 
-                                                    if (opcaoPaciente == 4) {
-                                                        opcaoMenu = 0;
-                                                        break;
-                                                    }
-                                                } while (opcaoPaciente < 1 || opcaoPaciente > 4);
+                                                if (opcaoPaciente == 4) {
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                }
 
                                             } while (opcaoPaciente < 1 || opcaoPaciente > 4);
+
+                                            switch (opcaoPaciente) {
+                                                case 1:
+                                                    PacienteController.cadastrarPaciente();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 2:
+                                                    PacienteController.atualizarDadosDoPaciente();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 3:
+                                                    PacienteController.visualizarDadosDoPaciente();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 4:
+                                                    limparTela();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
                                             break;
                                         case 3:
                                             break;
@@ -216,7 +228,7 @@ public class App {
                                 break;
                             }
                         } else {
-                            if (FuncionarioController.verificarExistenciaCPF(login) == false) {
+                            if (FuncionarioController.verificarExistenciaFuncionarioCPF(login) == false) {
                                 System.out.println("\n > Usuário inexistente no banco de dados. <\n");
                                 break;
                             }
