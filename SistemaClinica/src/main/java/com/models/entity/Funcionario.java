@@ -1,23 +1,22 @@
 package com.models.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Funcionario extends Usuario {
-    
+
     private String cargo;
     private double salario;
     private Date dataContratacao;
     private boolean status;
-    
-    public Funcionario(String cpf, String nome, Date dataNascimento, String sexo, String telefone, String email,
-            String senha, String cep, String rua, int numeroDaCasa, String bairro, String cidade, String uf,
-            String cargo, double salario, Date dataContratacao, boolean status) {
-        super(cpf, nome, dataNascimento, sexo, telefone, email, senha, cep, rua, numeroDaCasa, bairro, cidade, uf);
-        this.cargo = cargo;
-        this.salario = salario;
-        this.dataContratacao = dataContratacao;
-        this.status = status;
-    }
+
+    public Funcionario(String cpf, String nome, Date dataNascimento, String sexo, String cargo, double salario,
+            Date dataContratacao, Boolean status, String telefone, String email, String senha, String cep, String rua,
+            int numeroDaCasa, String bairro, String cidade, String uf) {
+                super(cpf, nome, dataNascimento, sexo, telefone, email, senha, cep, rua, numeroDaCasa, bairro, cidade, uf);
+                this.cargo = cargo;
+                this.salario = salario;
+                this.dataContratacao = dataContratacao;
+                this.status = status;    }
 
     public String getCargo() {
         return cargo;
@@ -43,7 +42,7 @@ public class Funcionario extends Usuario {
         this.dataContratacao = dataContratacao;
     }
 
-    public boolean isStatus() {
+    public boolean getStatus() {
         return status;
     }
 

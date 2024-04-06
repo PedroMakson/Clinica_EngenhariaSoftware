@@ -1,13 +1,13 @@
 package com.models.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Paciente extends Usuario {
 
     private double peso;
     private double altura;
     private String tipoSanguineo;
-
+    
     public Paciente(String cpf, String nome, Date dataNascimento, String sexo, String telefone, String email,
             String senha, String cep, String rua, int numeroDaCasa, String bairro, String cidade, String uf,
             double peso, double altura, String tipoSanguineo) {

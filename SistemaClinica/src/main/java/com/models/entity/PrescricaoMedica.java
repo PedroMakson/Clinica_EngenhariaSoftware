@@ -1,6 +1,6 @@
 package com.models.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class PrescricaoMedica {
 
