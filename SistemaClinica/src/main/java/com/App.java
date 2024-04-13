@@ -3,6 +3,7 @@ package com;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.controllers.ConsultaController;
 import com.controllers.FuncionarioController;
 import com.controllers.PacienteController;
 import com.controllers.ServicoController;
@@ -161,6 +162,7 @@ public class App {
                                                 System.out.println("| 1 -> Cadastrar Paciente       |");
                                                 System.out.println("| 2 -> Editar Paciente          |");
                                                 System.out.println("| 3 -> Visualizar Paciente      |");
+                                                System.out.println("| 4 -> Voltar menu              |");
                                                 System.out.println("+-------------------------------+");
                                                 System.out.printf("| Digite: ");
 
@@ -249,11 +251,11 @@ public class App {
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 2:
-                                                    ServicoController.exibirServicos();
+                                                    ServicoController.atualizarDadosDoServico();
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 3:
-
+                                                    ServicoController.exibirServicos();
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 4:
@@ -265,6 +267,61 @@ public class App {
                                             }
                                             break;
                                         case 4:
+                                            int opcaoConsulta;
+                                            do {
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("|           M  E  N  U          |");
+                                                System.out.println("|   C  O  N  S  U  L  T  A  S   |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("| 1 -> Agendar Consulta         |");
+                                                System.out.println("| 2 -> Editar Consulta          |");
+                                                System.out.println("| 3 -> Visualizar Consulta      |");
+                                                System.out.println("| 4 -> Voltar menu              |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.printf("| Digite: ");
+
+                                                if (scanner.hasNextInt()) {
+                                                    opcaoConsulta = scanner.nextInt();
+                                                    limparTela();
+                                                    if (opcaoConsulta < 1 || opcaoConsulta > 4) {
+                                                        System.out.println(
+                                                                "\n > Opção inválida, tente novamente! <\n");
+                                                    }
+                                                } else {
+                                                    limparTela();
+                                                    System.out.println("\n > Opção inválida, tente novamente! <\n");
+                                                    scanner.next(); // Limpar o buffer de entrada
+                                                    opcaoConsulta = -1; // Define uma opção inválida para continuar
+                                                                        // o loop
+                                                }
+
+                                                if (opcaoConsulta == 4) {
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                }
+
+                                            } while (opcaoConsulta < 1 || opcaoConsulta > 4);
+
+                                            switch (opcaoConsulta) {
+                                                case 1:
+                                                    ConsultaController.cadastrarConsulta();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 2:
+
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 3:
+                                                ConsultaController.visualizarDadosConsulta();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 4:
+                                                    limparTela();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
                                             break;
                                         case 5:
                                             break;

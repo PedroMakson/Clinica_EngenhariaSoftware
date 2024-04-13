@@ -7,7 +7,8 @@ public class Servico {
     private double valor;
     private boolean status;
     
-    public Servico(String nome, double valor, boolean status) {
+    public Servico(int codigo, String nome, double valor, boolean status) {
+        this.codigo = codigo;
         this.nome = nome;
         this.valor = valor;
         this.status = status;

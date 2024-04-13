@@ -32,7 +32,26 @@ public class ServicoDAO {
                 }
             }
         }
-        return false; // Retorna false se não encontrar uma correspondência de CPF
+        return false; // Retorna false se não encontrar uma correspondência
+    }
+
+    public boolean verificarCodigoServico(int codigoServico) throws SQLException {
+        String sql = "SELECT codigoServico FROM Servicos WHERE codigoServico = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, codigoServico);
+
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    int codigo = resultSet.getInt("codigoServico");
+
+                    if (codigo == codigoServico) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false; // Retorna false se não encontrar uma correspondência
     }
 
     public boolean inserirServico(Servico servico) {
@@ -52,7 +71,7 @@ public class ServicoDAO {
     }
 
     public void exibirServicosCadastrados() throws SQLException {
-        String sql = "SELECT codigoServico, nome, valor, status FROM Servicos";
+        String sql = "SELECT codigoServico, nome, valor, status FROM Servicos ORDER BY codigoServico ASC";
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             try (ResultSet resultSet = stmt.executeQuery()) {
@@ -78,4 +97,81 @@ public class ServicoDAO {
             }
         }
     }
+
+    public boolean atualizarAtributoServico(int codigoServico, int opcao, String novoValor) throws SQLException {
+        String sql = "";
+
+        switch (opcao) {
+            case 1:
+                sql = "UPDATE Servicos SET nome = ? WHERE codigoServico = ?";
+                break;
+            case 2:
+                sql = "UPDATE Servicos SET valor = ? WHERE codigoServico = ?";
+                break;
+            case 3:
+                sql = "UPDATE Servicos SET status = ? WHERE codigoServico = ?";
+                break;
+            default:
+                return false; // Retorna false se a opção não for válida
+        }
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            // Define o valor apropriado no PreparedStatement com base no tipo de atributo
+            if (opcao == 1) {
+                stmt.setString(1, novoValor);
+            } else if (opcao == 2) {
+                // Converter a string em um double
+                double valor;
+                try {
+                    valor = Double.parseDouble(novoValor);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    return false; // Retorna false em caso de erro na conversão
+                }
+                stmt.setDouble(1, valor);
+            } else if (opcao == 3) {
+                // Converter a string em um booleano
+                boolean status;
+                if (novoValor.equalsIgnoreCase("ativo")) {
+                    status = true;
+                } else if (novoValor.equalsIgnoreCase("inativo")) {
+                    status = false;
+                } else {
+                    return false; // Retorna false se o valor não for "ativo" ou "inativo"
+                }
+                stmt.setBoolean(1, status);
+            }
+
+            stmt.setInt(2, codigoServico);
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
+        }
+    }
+
+    public Servico retornarServicoPorCodigo(int codigoServico) {
+        String sql = "SELECT * FROM Servicos WHERE codigoServico = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, codigoServico);
+            ResultSet resultSet = stmt.executeQuery();
+
+            if (resultSet.next()) {
+                // Recupera os dados do ResultSet e cria um objeto Servico
+                Servico servico = new Servico(
+                        resultSet.getInt("codigoServico"),
+                        resultSet.getString("nome"),
+                        resultSet.getDouble("valor"),
+                        resultSet.getBoolean("status"));
+                return servico;
+            } else {
+                // Retorna null se nenhum serviço for encontrado com o código especificado
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // Retorna null em caso de exceção
+        }
+    }
+
 }

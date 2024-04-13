@@ -16,10 +16,18 @@ public class ServicoController {
     private static ServicoDAO servicoDAO = new ServicoDAO(conexao);
     static Scanner scanner = new Scanner(System.in);
 
+    public static boolean verificarExistenciaServicoCodigo(int codigoServico) throws SQLException {
+        if (servicoDAO.verificarCodigoServico(codigoServico)) {
+            return true;
+        }
+        return false;
+    }
+
     public static void cadastrarServico() throws SQLException {
         // Variáveis para armazenar os dados do serviço
         String nome = null;
         double valor = 0;
+        int codigo = 0;
         boolean status = true;
 
         System.out.println("+-------------------------------------------+");
@@ -83,7 +91,7 @@ public class ServicoController {
         } while (true);
 
         // Cria um objeto Servico com os dados validados
-        Servico servico = new Servico(nome, valor, status);
+        Servico servico = new Servico(codigo, nome, valor, status);
 
         // Insere o paciente no banco de dados
         if (servicoDAO.inserirServico(servico)) {
@@ -98,5 +106,152 @@ public class ServicoController {
 
     public static void exibirServicos() throws SQLException {
         servicoDAO.exibirServicosCadastrados();
+    }
+
+    public static void atualizarDadosDoServico() throws SQLException {
+        int opcao;
+        int codigoServico;
+        int contador = 1;
+
+        do {
+            System.out.println(" Tentativa " + (contador) + "/3.");
+            System.out.println("+----------------------------------------------+");
+            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+            System.out.println("+----------------------------------------------+");
+            System.out.printf("| Código do serviço: ");
+            codigoServico = scanner.nextInt();
+            scanner.nextLine(); // Consumir a quebra de linha
+
+            if (!servicoDAO.verificarCodigoServico(codigoServico)) {
+                App.limparTela();
+                System.out.println("\n > Serviço inexistente no banco de dados. <\n");
+                contador++;
+            }
+
+            if (contador == 3) {
+                break;
+            }
+
+        } while (!servicoDAO.verificarCodigoServico(codigoServico));
+
+        if (contador != 3) {
+            do {
+                App.limparTela();
+                System.out.println("+----------------------------------------------+");
+                System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                System.out.println("+----------------------------------------------+");
+                System.out.println("|  1 - Descrição                               |");
+                System.out.println("|  2 - Valor                                   |");
+                System.out.println("|  3 - Status                                  |");
+                System.out.println("|  0 - Sair                                    |");
+                System.out.println("+----------------------------------------------+");
+
+                System.out.printf("| > Escolha o dado: ");
+
+                // Verifica se a entrada é um número
+                if (scanner.hasNextInt()) {
+                    opcao = scanner.nextInt();
+                    scanner.nextLine(); // Consumir a quebra de linha
+                    if (opcao < 0 || opcao > 3) {
+                        App.limparTela();
+                        System.out.println("\n > Opção inválida, tente novamente! <\n");
+                        continue;
+                    }
+                } else {
+                    // Se a entrada não for um número, limpa o buffer do scanner e exibe uma
+                    // mensagem de erro
+                    scanner.nextLine(); // Limpar o buffer do scanner
+                    App.limparTela();
+                    System.out.println("\n > Por favor, digite apenas números! <\n");
+                    continue; // Reinicie o loop para solicitar uma nova entrada
+                }
+
+                // Caso o usuário escolha sair, encerre o método
+                if (opcao == 0) {
+                    App.limparTela();
+                    return;
+                }
+
+                App.limparTela();
+                String novoValor;
+                switch (opcao) {
+                    case 1: // Descrição
+                        do {
+                            System.out.println("+----------------------------------------------+");
+                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                            System.out.println("+----------------------------------------------+");
+                            System.out.print("-> Nova Descrição: ");
+                            novoValor = scanner.nextLine();
+                            if (Objects.isNull(novoValor) || novoValor.trim().isEmpty() || novoValor.length() > 255) {
+                                App.limparTela();
+                                System.out.println("\n > Descrição inválida, tente novamente! <\n");
+                                continue;
+                            }
+                            // Verificar se a descrição já está em uso
+                            if (servicoDAO.verificarNomeServico(novoValor)) {
+                                App.limparTela();
+                                System.out.println("\n > Esta descrição já está em uso. Por favor, insira outra. <\n");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        break;
+                    case 2: // Valor
+                        do {
+                            System.out.println("+----------------------------------------------+");
+                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                            System.out.println("+----------------------------------------------+");
+                            System.out.print("-> Novo Valor: ");
+                            novoValor = scanner.nextLine();
+                            try {
+                                double valor = Double.parseDouble(novoValor);
+                                if (valor <= 0) {
+                                    App.limparTela();
+                                    System.out.println("\n > Valor deve ser um número positivo. Tente novamente. <\n");
+                                    continue;
+                                }
+                            } catch (NumberFormatException e) {
+                                App.limparTela();
+                                System.out.println(
+                                        "\n > Valor inválido. Por favor, insira um valor numérico válido. <\n");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        break;
+                    case 3: // Status
+                        do {
+                            System.out.println("+----------------------------------------------+");
+                            System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
+                            System.out.println("+----------------------------------------------+");
+                            System.out.print("-> Novo Status (Ativo/Inativo): ");
+                            novoValor = scanner.nextLine().toLowerCase();
+                            if (Objects.isNull(novoValor) || novoValor.trim().isEmpty() ||
+                                    (!novoValor.equals("ativo") && !novoValor.equals("inativo"))) {
+                                App.limparTela();
+                                System.out.println("\n > Status inválido. Insira 'ativo' ou 'inativo'. <\n");
+                                continue;
+                            }
+                            break;
+                        } while (true);
+                        break;
+                    default:
+                        System.out.println("\n > Opção inválida, tente novamente! <\n");
+                        continue; // Reinicie o loop para solicitar uma nova entrada
+                }
+
+                // Chamar o método para atualizar o atributo do serviço
+                if (servicoDAO.atualizarAtributoServico(codigoServico, opcao, novoValor)) {
+                    App.limparTela();
+                    System.out.println("\n > Dados atualizados com sucesso! <\n");
+                    return;
+                } else {
+                    App.limparTela();
+                    System.out.println("\n > Falha ao atualizar os dados! <\n");
+                    return;
+                }
+
+            } while (true);
+        }
     }
 }

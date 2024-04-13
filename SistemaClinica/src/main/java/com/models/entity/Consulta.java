@@ -1,21 +1,45 @@
 package com.models.entity;
 
-import java.sql.Date;
+import java.util.Date;
+import java.time.LocalTime;
 
 public class Consulta {
 
+    private int codigoConsulta;
+    private Funcionario funcionario;
     private Paciente paciente;
     private Servico servico;
     private Date data;
-    private String horario;
-    private String status;
-    
-    public Consulta(Paciente paciente, Servico servico, Date data, String horario, String status) {
+    private LocalTime horario;
+    private String statusConsulta;
+    private boolean pagamento;
+
+    public Consulta(int codigoConsulta, Funcionario funcionario, Paciente paciente, Servico servico, Date data,
+            LocalTime horario, String statusConsulta, boolean pagamento) {
+        this.codigoConsulta = codigoConsulta;
+        this.funcionario = funcionario;
         this.paciente = paciente;
         this.servico = servico;
         this.data = data;
         this.horario = horario;
-        this.status = status;
+        this.statusConsulta = statusConsulta;
+        this.pagamento = pagamento;
+    }
+
+    public int getCodigoConsulta() {
+        return codigoConsulta;
+    }
+
+    public void setCodigoConsulta(int codigoConsulta) {
+        this.codigoConsulta = codigoConsulta;
+    }
+
+    public Funcionario getFuncionario() {
+        return funcionario;
+    }
+
+    public void setFuncionario(Funcionario funcionario) {
+        this.funcionario = funcionario;
     }
 
     public Paciente getPaciente() {
@@ -42,20 +66,28 @@ public class Consulta {
         this.data = data;
     }
 
-    public String getHorario() {
+    public LocalTime getHorario() {
         return horario;
     }
 
-    public void setHorario(String horario) {
+    public void setHorario(LocalTime horario) {
         this.horario = horario;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusConsulta() {
+        return statusConsulta;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusConsulta(String statusConsulta) {
+        this.statusConsulta = statusConsulta;
     }
-    
+
+    public boolean isPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(boolean pagamento) {
+        this.pagamento = pagamento;
+    }
+
 }
