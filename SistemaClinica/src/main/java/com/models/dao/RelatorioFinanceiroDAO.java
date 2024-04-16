@@ -77,21 +77,6 @@ public class RelatorioFinanceiroDAO {
 
         } catch (SQLException | IOException e) {
             e.printStackTrace();
-        } finally {
-            // Fechar conexão com o banco de dados
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conexao != null) {
-                    conexao.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
         return false; // Em caso de erro

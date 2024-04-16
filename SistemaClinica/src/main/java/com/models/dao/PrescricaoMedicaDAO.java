@@ -135,6 +135,7 @@ public class PrescricaoMedicaDAO {
 
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setString(1, cpfPaciente);
+            App.limparTela();
 
             try (ResultSet rs = stmt.executeQuery()) {
                 System.out.println(
@@ -171,7 +172,7 @@ public class PrescricaoMedicaDAO {
                             dataFormatada);
                 }
                 System.out.println(
-                        "+--------------+------------------+---------------+------------------+----------------------+-------------------------------+-------------------------+");
+                        "+--------------+------------------+---------------+------------------+----------------------+-------------------------------+-------------------------+\n");
 
             }
         }

@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -44,6 +46,8 @@ public class PacienteController {
         String bairro = null;
         String cidade = null;
         String uf = null;
+        List<String> ufsValidas = Arrays.asList("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT",
+        "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO");
 
         System.out.println("+-------------------------------------------+");
         System.out.println("|      C  A  D  A  S  T  R  O    D  E       |");
@@ -430,35 +434,43 @@ public class PacienteController {
             break;
         } while (true);
 
-        // Validação para a UF
-        do {
-            System.out.print("-> UF: ");
-            uf = scanner.nextLine();
-
-            // Verifica se a UF não é nula ou vazia
-            if (Objects.isNull(uf) || uf.trim().isEmpty()) {
-                App.limparTela();
-                System.out.println("\n > A UF não pode ser nula ou vazia. Tente novamente. <\n");
-                continue;
-            }
-
-            // Verifica se a UF tem exatamente 2 caracteres
-            if (uf.length() != 2) {
-                App.limparTela();
-                System.out.println("\n > A UF deve conter exatamente 2 caracteres. <\n");
-                continue; // Volta ao início do loop para uma nova entrada
-            }
-
-            // Verifica se a UF não contém números
-            if (uf.matches(".*\\d+.*")) {
-                App.limparTela();
-                System.out.println("\n > A UF não deve conter números. <\n");
-                continue; // Volta ao início do loop para uma nova entrada
-            }
-
-            // Se passar por todas as verificações, encerra o loop
-            break;
-        } while (true);
+                // Validação para a UF
+                do {
+                    System.out.print("-> UF: ");
+                    uf = scanner.nextLine().toUpperCase(); // Converte para maiúsculas para garantir a validação
+        
+                    // Verifica se a UF não é nula ou vazia
+                    if (uf == null || uf.trim().isEmpty()) {
+                        App.limparTela();
+                        System.out.println("\n > A UF não pode ser nula ou vazia. Tente novamente. <\n");
+                        continue;
+                    }
+        
+                    // Verifica se a UF tem exatamente 2 caracteres
+                    if (uf.length() != 2) {
+                        App.limparTela();
+                        System.out.println("\n > A UF deve conter exatamente 2 caracteres. <\n");
+                        continue; // Volta ao início do loop para uma nova entrada
+                    }
+        
+                    // Verifica se a UF não contém números
+                    if (uf.matches(".*\\d+.*")) {
+                        App.limparTela();
+                        System.out.println("\n > A UF não deve conter números. <\n");
+                        continue; // Volta ao início do loop para uma nova entrada
+                    }
+        
+                    // Verifica se a UF é válida
+                    if (!ufsValidas.contains(uf)) {
+                        App.limparTela();
+                        System.out.println(
+                                "\n > A UF inserida não é válida. As UF's válidas são: AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO. Tente novamente. <\n");
+                        continue; // Volta ao início do loop para uma nova entrada
+                    }
+        
+                    // Se passar por todas as verificações, encerra o loop
+                    break;
+                } while (true);
 
         // Cria um objeto Paciente com os dados validados
         Paciente paciente = new Paciente(cpf, nome, dataNascimento, sexo, peso, altura, tipoSanguineo, telefone, email,

@@ -2,10 +2,12 @@ package com.controllers;
 
 import java.sql.Connection;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -61,6 +63,8 @@ public class FuncionarioController {
         String bairro = null;
         String cidade = null;
         String uf = null;
+        List<String> ufsValidas = Arrays.asList("AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT",
+                "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO");
 
         System.out.println("+-------------------------------------------+");
         System.out.println("|      C  A  D  A  S  T  R  O    D  E       |");
@@ -434,10 +438,10 @@ public class FuncionarioController {
         // Validação para a UF
         do {
             System.out.print("-> UF: ");
-            uf = scanner.nextLine();
+            uf = scanner.nextLine().toUpperCase(); // Converte para maiúsculas para garantir a validação
 
             // Verifica se a UF não é nula ou vazia
-            if (Objects.isNull(uf) || uf.trim().isEmpty()) {
+            if (uf == null || uf.trim().isEmpty()) {
                 App.limparTela();
                 System.out.println("\n > A UF não pode ser nula ou vazia. Tente novamente. <\n");
                 continue;
@@ -454,6 +458,14 @@ public class FuncionarioController {
             if (uf.matches(".*\\d+.*")) {
                 App.limparTela();
                 System.out.println("\n > A UF não deve conter números. <\n");
+                continue; // Volta ao início do loop para uma nova entrada
+            }
+
+            // Verifica se a UF é válida
+            if (!ufsValidas.contains(uf)) {
+                App.limparTela();
+                System.out.println(
+                        "\n > A UF inserida não é válida. As UF's válidas são: AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO. Tente novamente. <\n");
                 continue; // Volta ao início do loop para uma nova entrada
             }
 
@@ -860,6 +872,7 @@ public class FuncionarioController {
                         } while (true);
                         break;
                     case 14: // UF
+
                         do {
                             System.out.println("+----------------------------------------------+");
                             System.out.println("|   A T U A L I Z A R  I N F O R M A Ç Õ E S   |");
