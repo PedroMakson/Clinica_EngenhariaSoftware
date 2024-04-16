@@ -895,6 +895,68 @@ public class FuncionarioController {
         }
     }
 
+    public static void alterarSenhaDeslogado() throws SQLException {
+
+        String novaSenha1 = "";
+        String novaSenha2 = "";
+        String cpf = null;
+        int tentativas = 0;
+
+        do {
+            System.out.println("+-------------------------------------------+");
+            System.out.println("|    A  L  T  E  R  A  R   S  E  N  H  A    |");
+            System.out.println("+-------------------------------------------+");
+            System.out.printf("| Funcionário (CPF): ");
+            cpf = scanner.nextLine();
+            App.limparTela();
+
+            if (!verificarExistenciaFuncionarioCPF(cpf)) {
+                tentativas++;
+                App.limparTela();
+                System.out.println("\n > Funcionário inexistente no banco de dados! <\n");
+                System.out.println(" Tentativa " + tentativas + "/3.");
+            }
+
+            if (tentativas >= 3) {
+                App.limparTela();
+                System.out.println("\n > Número máximo de tentativas excedido. <\n");
+                break;
+            }
+
+        } while (!verificarExistenciaFuncionarioCPF(cpf));
+
+        if (tentativas < 3) {
+            do {
+                System.out.println("+-------------------------------------------+");
+                System.out.println("|    A  L  T  E  R  A  R   S  E  N  H  A    |");
+                System.out.println("+-------------------------------------------+");
+                System.out.println("| Funcionário (CPF): " + cpf);
+                System.out.println("+-------------------------------------------+");
+                System.out.printf("| Nova senha: ");
+                novaSenha1 = scanner.next();
+
+                // Verifica se a nova senha não é nula e tem até 30 caracteres
+                if (novaSenha1 != null && novaSenha1.length() <= 30) {
+                    System.out.printf("| Confirmar nova senha: ");
+                    novaSenha2 = scanner.next();
+
+                    // Verifica se as senhas coincidem
+                    if (!(novaSenha1.equals(novaSenha2))) {
+                        App.limparTela();
+                        System.out.println("\n > As senhas não condizem, tente novamente. <\n");
+                    }
+                } else {
+                    App.limparTela();
+                    System.out.println("\n > A senha deve ter até 30 caracteres. <\n");
+                }
+            } while (!(novaSenha1.equals(novaSenha2)));
+
+            funcionarioDAO.mudarSenhaFuncionario(cpf, novaSenha2);
+            App.limparTela();
+            System.out.println("\n > Senha alterada com sucesso. <\n");
+        }
+    }
+
     static Date stringParaData(String dataString) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {

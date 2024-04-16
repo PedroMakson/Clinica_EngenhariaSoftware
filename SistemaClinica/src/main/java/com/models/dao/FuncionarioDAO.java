@@ -282,4 +282,19 @@ public class FuncionarioDAO {
         }
     }
 
+    public boolean mudarSenhaFuncionario(String cpf, String novaSenha) {
+        String sql = "UPDATE Funcionario SET senha = ? WHERE cpf = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setString(1, novaSenha);
+            stmt.setString(2, cpf);
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // Retorna falso em caso de exceção
+        }
+    }
+
 }

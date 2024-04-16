@@ -1,12 +1,14 @@
 package com.models.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import com.App;
 import com.models.entity.Consulta;
@@ -17,9 +19,11 @@ import com.models.entity.Servico;
 public class ConsultaDAO {
 
     private static Connection conexao;
+    private static ServicoDAO servicoDAO = new ServicoDAO(conexao);
 
     public ConsultaDAO(Connection conexao) {
         ConsultaDAO.conexao = conexao;
+        ServicoDAO.conexao = conexao;
     }
 
     public boolean inserirConsulta(Funcionario funcionario, Paciente paciente, Servico servico, Consulta consulta) {
@@ -64,7 +68,38 @@ public class ConsultaDAO {
         return false; // Retorna false se não houver consulta para o horário especificado
     }
 
-    public void consultarConsultasPorPeriodo(LocalDate dataInicio, LocalDate dataFim) throws SQLException {
+    public LocalDate getDataConsultaPeloId(int idConsulta) throws SQLException {
+        String sql = "SELECT dataConsulta FROM Consulta WHERE consulta_id = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idConsulta);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // Converte o java.sql.Date para LocalDate
+                Date dataConsulta = rs.getDate("dataConsulta");
+                return dataConsulta.toLocalDate();
+            }
+        }
+        return null; // Retorna null se não encontrar a consulta com o ID especificado
+    }
+
+    public boolean verificarConsultaPeloId(int idConsulta) throws SQLException {
+        String sql = "SELECT COUNT(*) AS count FROM Consulta WHERE consulta_id = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idConsulta);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt("count");
+                    return count > 0; // Retorna true se existir uma consulta com o ID especificado
+                }
+            }
+        }
+        return false; // Retorna false se não houver consulta com o ID especificado
+    }
+
+    public void retornarConsultasPorPeriodo(LocalDate dataInicio, LocalDate dataFim) throws SQLException {
         String sql = "SELECT * FROM Consulta WHERE dataConsulta BETWEEN ? AND ?";
         try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
             stmt.setDate(1, java.sql.Date.valueOf(dataInicio));
@@ -121,7 +156,84 @@ public class ConsultaDAO {
         }
     }
 
-    public void atualizarAtributosConsulta() {
+    public boolean atualizarCodigoNomeValorServico(int idConsulta, int novoCodigo) throws SQLException {
+        String novoNomeServico = servicoDAO.retornarNomeServico(novoCodigo);
+        double novoValorServico = servicoDAO.retornarValorServico(novoCodigo);
 
+        if (novoNomeServico == null) {
+            System.out.println("O código do serviço especificado não existe.");
+            return false;
+        }
+
+        String sql = "UPDATE Consulta SET codigoServico = ?, nomeServico = ?, valorServico = ? WHERE consulta_id = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, novoCodigo);
+            stmt.setString(2, novoNomeServico);
+            stmt.setDouble(3, novoValorServico);
+            stmt.setInt(4, idConsulta);
+
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
+        }
+    }
+
+    public boolean atualizarAtributosConsulta(int idConsulta, int opcao, String novoValor) throws SQLException {
+        String sql = "";
+
+        switch (opcao) {
+            case 1:
+                return atualizarCodigoNomeValorServico(idConsulta, Integer.parseInt(novoValor));
+            case 2:
+                sql = "UPDATE Consulta SET dataConsulta = ? WHERE consulta_id = ?";
+                break;
+            case 3:
+                sql = "UPDATE Consulta SET horario = ? WHERE consulta_id = ?";
+                break;
+            case 4:
+                sql = "UPDATE Consulta SET statusConsulta = ? WHERE consulta_id = ?";
+                break;
+            case 5:
+                sql = "UPDATE Consulta SET statusPagamento = ? WHERE consulta_id = ?";
+                break;
+            default:
+                return false;
+        }
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            // Converte a String para LocalDate ou LocalTime de acordo com a opção
+            if (opcao == 2 && !novoValor.isEmpty()) {
+                // Converte a String para LocalDate
+                LocalDate novaData = LocalDate.parse(novoValor, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                // Define a data formatada para a instrução SQL
+                stmt.setDate(1, java.sql.Date.valueOf(novaData));
+            } else if (opcao == 3 && !novoValor.isEmpty()) {
+                // Converte a String para LocalTime
+                LocalTime novoHorario = LocalTime.parse(novoValor, DateTimeFormatter.ofPattern("HH:mm"));
+                // Converte para java.sql.Time
+                stmt.setTime(1, java.sql.Time.valueOf(novoHorario));
+            } else if (opcao == 5) {
+                // Converte a String para boolean
+                boolean statusPagamento = novoValor.equalsIgnoreCase("pago");
+                stmt.setBoolean(1, statusPagamento);
+                atualizarStatusConsultaParaConcluido(idConsulta);
+            } else {
+                stmt.setString(1, novoValor);
+            }
+            stmt.setInt(2, idConsulta);
+            int linhasAfetadas = stmt.executeUpdate();
+            return linhasAfetadas > 0;
+        } catch (DateTimeParseException | SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void atualizarStatusConsultaParaConcluido(int idConsulta) throws SQLException {
+        String sql = "UPDATE Consulta SET statusConsulta = 'Concluído' WHERE consulta_id = ?";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, idConsulta);
+            stmt.executeUpdate();
+        }
     }
 }

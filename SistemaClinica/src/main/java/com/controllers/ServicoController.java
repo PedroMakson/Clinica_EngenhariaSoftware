@@ -23,6 +23,10 @@ public class ServicoController {
         return false;
     }
 
+    public static boolean verificarStatusServico(int codigoServico) throws SQLException {
+        return servicoDAO.verificarStatusServico(codigoServico);
+    }
+
     public static void cadastrarServico() throws SQLException {
         // Variáveis para armazenar os dados do serviço
         String nome = null;

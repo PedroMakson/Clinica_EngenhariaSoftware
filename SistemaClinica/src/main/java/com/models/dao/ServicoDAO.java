@@ -10,7 +10,7 @@ import com.models.entity.Servico;
 
 public class ServicoDAO {
 
-    private static Connection conexao;
+    static Connection conexao;
 
     public ServicoDAO(Connection conexao) {
         ServicoDAO.conexao = conexao;
@@ -48,6 +48,22 @@ public class ServicoDAO {
                     if (codigo == codigoServico) {
                         return true;
                     }
+                }
+            }
+        }
+        return false; // Retorna false se não encontrar uma correspondência
+    }
+
+    public boolean verificarStatusServico(int codigoServico) throws SQLException {
+        String sql = "SELECT status FROM Servicos WHERE codigoServico = ?";
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, codigoServico);
+
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    boolean status = resultSet.getBoolean("status");
+                    return status;
                 }
             }
         }
@@ -174,4 +190,35 @@ public class ServicoDAO {
         }
     }
 
+    public String retornarNomeServico(int codigoServico) throws SQLException {
+        String sql = "SELECT nome FROM Servicos WHERE codigoServico = ?";
+        String nomeServico = null;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, codigoServico);
+
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    nomeServico = resultSet.getString("nome"); // Ajuste aqui para "nome"
+                }
+            }
+        }
+        return nomeServico;
+    }
+
+    public double retornarValorServico(int codigoServico) throws SQLException {
+        String sql = "SELECT valor FROM Servicos WHERE codigoServico = ?";
+        double valorServico = 0.0;
+
+        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+            stmt.setInt(1, codigoServico);
+
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    valorServico = resultSet.getDouble("valor");
+                }
+            }
+        }
+        return valorServico;
+    }
 }

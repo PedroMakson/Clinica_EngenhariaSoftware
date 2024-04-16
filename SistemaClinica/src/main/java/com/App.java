@@ -6,6 +6,8 @@ import java.util.Scanner;
 import com.controllers.ConsultaController;
 import com.controllers.FuncionarioController;
 import com.controllers.PacienteController;
+import com.controllers.PrescricaoMedicaController;
+import com.controllers.RelatorioFinanceiroController;
 import com.controllers.ServicoController;
 import com.models.entity.Conexao;
 
@@ -308,11 +310,11 @@ public class App {
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 2:
-
+                                                    ConsultaController.atualizarDadosDaConsulta();
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 3:
-                                                ConsultaController.visualizarDadosConsulta();
+                                                    ConsultaController.visualizarDadosConsulta();
                                                     opcaoMenu = 0;
                                                     break;
                                                 case 4:
@@ -324,10 +326,70 @@ public class App {
                                             }
                                             break;
                                         case 5:
+
+                                            int opcaoPrescricao;
+                                            do {
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("|           M  E  N  U          |");
+                                                System.out.println("|  P  R  E  S  C  R  I  C  A  O |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.println("| 1 -> Realizar Prescrição      |");
+                                                System.out.println("| 2 -> Visualizar Prescrição    |");
+                                                System.out.println("| 3 -> Apagar Prescrição        |");
+                                                System.out.println("| 4 -> Voltar menu              |");
+                                                System.out.println("+-------------------------------+");
+                                                System.out.printf("| Digite: ");
+
+                                                if (scanner.hasNextInt()) {
+                                                    opcaoPrescricao = scanner.nextInt();
+                                                    limparTela();
+                                                    if (opcaoPrescricao < 1 || opcaoPrescricao > 4) {
+                                                        System.out.println(
+                                                                "\n > Opção inválida, tente novamente! <\n");
+                                                    }
+                                                } else {
+                                                    limparTela();
+                                                    System.out.println("\n > Opção inválida, tente novamente! <\n");
+                                                    scanner.next(); // Limpar o buffer de entrada
+                                                    opcaoPrescricao = -1; // Define uma opção inválida para continuar
+                                                                          // o loop
+                                                }
+
+                                                if (opcaoPrescricao == 4) {
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                }
+
+                                            } while (opcaoPrescricao < 1 || opcaoPrescricao > 4);
+
+                                            switch (opcaoPrescricao) {
+                                                case 1:
+                                                    PrescricaoMedicaController.cadastrarPrescricaoMedica();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 2:
+                                                    PrescricaoMedicaController.visualizarPrescricoesMedicas();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 3:
+                                                    PrescricaoMedicaController.excluirPrescricaoMedica();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                case 4:
+                                                    limparTela();
+                                                    opcaoMenu = 0;
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
                                             break;
                                         case 6:
+                                            PrescricaoMedicaController.visualizarProntuario();
+                                            opcaoMenu = 0;
                                             break;
                                         case 7:
+                                            RelatorioFinanceiroController.gerarRelatorioFinanceiro();
+                                            opcaoMenu = 0;
                                             break;
                                         default:
                                             break;
@@ -344,6 +406,37 @@ public class App {
                                 break;
                             }
                             System.out.println("\n  > Login ou senha inválidos. <\n");
+                        }
+                        break;
+                    case 2:
+                        int opcaoAjuda;
+                        do {
+                            System.out.println("+------------------------------------+");
+                            System.out.println("|   P R E C I S A  D E  A J U D A ?  |");
+                            System.out.println("+------------------------------------+");
+                            System.out.println("| 1 -> Alterar senha                 |");
+                            System.out.println("| 2 -> Voltar menu                   |");
+                            System.out.println("+------------------------------------+");
+                            System.out.printf("| Digite: ");
+                            opcaoAjuda = scanner.nextInt();
+
+                            limparTela();
+                            if (opcaoAjuda < 1 || opcaoAjuda > 2) {
+                                System.out.println("\n > Opção inválida, tente novamente! < \n");
+                            }
+
+                        } while (opcaoAjuda < 1 || opcaoAjuda > 2);
+
+                        switch (opcaoAjuda) {
+                            case 1: // ALTERAR SENHA
+                                limparTela();
+                                FuncionarioController.alterarSenhaDeslogado();
+                                break;
+                            case 2: // VOLTA MENU
+                                opcao = 0;
+                                break;
+                            default:
+                                break;
                         }
                         break;
                     default:
