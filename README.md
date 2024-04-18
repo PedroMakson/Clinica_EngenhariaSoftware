@@ -73,7 +73,7 @@
 
 ![Diagrama de Classe](https://github.com/PedroMakson/Clinica_EngenhariaSoftware/blob/main/Diagramas/DiagramaDeClasse.png?raw=true)
 <p align="right">
-   Figura 01: <a href="https://drive.google.com/file/d/1rQWGY-u24EdTtthOCRRWNBHo2Ge2iUAb/view?usp=drive_link" target="_blank">Diagrama de Classes</a>
+   Figura 01: <a href="https://drive.google.com/file/d/1x8H1gcf-GEMyoTFhgmE-vI1N0JeSXd1B/view?usp=sharing" target="_blank">Diagrama de Classes</a>
 </p>
 
 <h3 align="justify">📑 Diagrama de Caso e Uso</h3>
